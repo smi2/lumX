@@ -1657,7 +1657,7 @@
 
         $scope.$on('lx-dropdown__close', function(_event, _params)
         {
-            if (_params.uuid === lxDropdown.uuid && lxDropdown.isOpen)
+            if (_params.uuid.indexOf(lxDropdown.uuid) > -1 && lxDropdown.isOpen)
             {
                 closeDropdownMenu();
             }
@@ -1674,7 +1674,7 @@
         {
             $interval.cancel(dropdownInterval);
 
-            LxDropdownService.resetActiveDropdownUuid();
+            LxDropdownService.resetActiveDropdownUuid(lxDropdown.uuid);
 
             var velocityProperties;
             var velocityEasing;
@@ -2115,8 +2115,9 @@
                 {
                     _event.stopPropagation();
                 }
-
-                LxDropdownService.closeActiveDropdown();
+                if(!getParentScope(angular.element(_event.target).scope())){
+                    LxDropdownService.closeActiveDropdown();
+                }
                 LxDropdownService.registerActiveDropdownUuid(ctrl.uuid);
 
                 if (ctrl.hover)
@@ -2281,6 +2282,16 @@
         }
     }
 })();
+var getParentScope = function (scope) {
+    if(!scope.lxDropdownMenu){
+        if(!scope.$parent){
+            return "";
+        }
+        return getParentScope(scope.$parent);
+    } else {
+        return scope.lxDropdownMenu;
+    }
+};
 (function()
 {
     'use strict';
@@ -2294,7 +2305,7 @@
     function LxDropdownService($document, $rootScope, $timeout)
     {
         var service = this;
-        var activeDropdownUuid;
+        var activeDropdownUuids = [];
 
         service.close = close;
         service.closeActiveDropdown = closeActiveDropdown;
@@ -2303,7 +2314,17 @@
         service.registerActiveDropdownUuid = registerActiveDropdownUuid;
         service.resetActiveDropdownUuid = resetActiveDropdownUuid;
 
-        $document.on('click', closeActiveDropdown);
+        $document.on('click', (event)=>{
+            if(event.target.className.indexOf('lx-select-choices__choice')>-1){
+                var scope = angular.element(event.target).scope();
+                var ddlScope = getParentScope(scope);
+                if(ddlScope && ddlScope.parentCtrl && ddlScope.parentCtrl.uuid){
+                    service.close(ddlScope.parentCtrl.uuid);
+                }
+                return;
+            }
+            closeActiveDropdown();
+        });
 
         ////////////
 
@@ -2319,7 +2340,7 @@
         {
             $rootScope.$broadcast('lx-dropdown__close',
             {
-                uuid: activeDropdownUuid
+                uuid: activeDropdownUuids
             });
         }
 
@@ -2334,17 +2355,26 @@
 
         function isOpen(_uuid)
         {
-            return activeDropdownUuid === _uuid;
+            return activeDropdownUuids.indexOf(_uuid) > -1;
         }
 
         function registerActiveDropdownUuid(_uuid)
         {
-            activeDropdownUuid = _uuid;
+            if(activeDropdownUuids.indexOf(_uuid)==-1){
+                activeDropdownUuids.push(_uuid);
+            }
         }
 
-        function resetActiveDropdownUuid()
+        function resetActiveDropdownUuid(_uuid)
         {
-            activeDropdownUuid = undefined;
+            if(_uuid){
+                var i = activeDropdownUuids.indexOf(_uuid);
+                if(i!=-1){
+                    activeDropdownUuids.splice(i, 1);
+                }
+                return;
+            }
+            activeDropdownUuids = [];
         }
     }
 })();
