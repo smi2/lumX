@@ -1561,6 +1561,7 @@
                 offset: '@?lxOffset',
                 overToggle: '=?lxOverToggle',
                 position: '@?lxPosition',
+                verticalPosition: '@?lxVerticalPosition',
                 width: '@?lxWidth'
             },
             link: link,
@@ -1642,6 +1643,7 @@
         lxDropdown.isOpen = false;
         lxDropdown.overToggle = angular.isDefined(lxDropdown.overToggle) ? lxDropdown.overToggle : false;
         lxDropdown.position = angular.isDefined(lxDropdown.position) ? lxDropdown.position : 'left';
+        lxDropdown.verticalPosition = angular.isDefined(lxDropdown.verticalPosition) ? lxDropdown.verticalPosition : '';
 
         $scope.$on('lx-dropdown__open', function(_event, _params)
         {
@@ -1770,10 +1772,22 @@
             if (availableHeightOnTop > availableHeightOnBottom)
             {
                 direction = 'top';
+                lxDropdown.direction = 'up';
             }
             else
             {
                 direction = 'bottom';
+                lxDropdown.direction = 'down';
+            }
+
+            if (lxDropdown.verticalPosition == 'top') {
+                direction = 'top';
+                lxDropdown.direction = 'up';
+            }
+
+            if (lxDropdown.verticalPosition == 'bottom') {
+                direction = 'bottom';
+                lxDropdown.direction = 'down';
             }
 
             return {
@@ -1815,6 +1829,10 @@
             {
                 dropdownMenuLeft = dropdownToggle.offset().left;
                 dropdownMenuRight = 'auto';
+                dropdownMenu.find('.dropdown-menu__top_beak,.dropdown-menu__bottom_beak').css(
+                {
+                    left: ((dropdownMenuWidth > dropdownToggleWidth ? dropdownToggleWidth / 2 : dropdownMenuWidth / 2) - 5) + "px"
+                });
             }
             else if (lxDropdown.position === 'right')
             {
@@ -5123,6 +5141,7 @@ angular.module("lumx.dropdown").run(['$templateCache', function(a) { a.put('drop
     '<div class="dropdown-menu">\n' +
     '<div class="dropdown-menu__top_beak"></div>\n' +
     '    <div class="dropdown-menu__content" ng-transclude ng-if="lxDropdownMenu.parentCtrl.isOpen"></div>\n' +
+    '<div class="dropdown-menu__bottom_beak"></div>\n' +
     '</div>\n' +
     '');
 	 }]);
