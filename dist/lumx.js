@@ -1657,7 +1657,7 @@
 
         $scope.$on('lx-dropdown__close', function(_event, _params)
         {
-            if (_params.uuid.indexOf(lxDropdown.uuid) > -1 && lxDropdown.isOpen)
+            if (_params.uuid === lxDropdown.uuid && lxDropdown.isOpen)
             {
                 closeDropdownMenu();
             }
@@ -1674,7 +1674,7 @@
         {
             $interval.cancel(dropdownInterval);
 
-            LxDropdownService.resetActiveDropdownUuid(lxDropdown.uuid);
+            LxDropdownService.resetActiveDropdownUuid();
 
             var velocityProperties;
             var velocityEasing;
@@ -2115,9 +2115,8 @@
                 {
                     _event.stopPropagation();
                 }
-                if(!getParentScope(angular.element(_event.target).scope())){
-                    LxDropdownService.closeActiveDropdown();
-                }
+
+                LxDropdownService.closeActiveDropdown();
                 LxDropdownService.registerActiveDropdownUuid(ctrl.uuid);
 
                 if (ctrl.hover)
@@ -2282,16 +2281,6 @@
         }
     }
 })();
-var getParentScope = function (scope) {
-    if(!scope.lxDropdownMenu){
-        if(!scope.$parent){
-            return "";
-        }
-        return getParentScope(scope.$parent);
-    } else {
-        return scope.lxDropdownMenu;
-    }
-};
 (function()
 {
     'use strict';
@@ -2305,7 +2294,7 @@ var getParentScope = function (scope) {
     function LxDropdownService($document, $rootScope, $timeout)
     {
         var service = this;
-        var activeDropdownUuids = [];
+        var activeDropdownUuid;
 
         service.close = close;
         service.closeActiveDropdown = closeActiveDropdown;
@@ -2314,17 +2303,7 @@ var getParentScope = function (scope) {
         service.registerActiveDropdownUuid = registerActiveDropdownUuid;
         service.resetActiveDropdownUuid = resetActiveDropdownUuid;
 
-        $document.on('click', (event)=>{
-            if(event.target.className.indexOf('lx-select-choices__choice')>-1){
-                var scope = angular.element(event.target).scope();
-                var ddlScope = getParentScope(scope);
-                if(ddlScope && ddlScope.parentCtrl && ddlScope.parentCtrl.uuid){
-                    service.close(ddlScope.parentCtrl.uuid);
-                }
-                return;
-            }
-            closeActiveDropdown();
-        });
+        $document.on('click', closeActiveDropdown);
 
         ////////////
 
@@ -2340,7 +2319,7 @@ var getParentScope = function (scope) {
         {
             $rootScope.$broadcast('lx-dropdown__close',
             {
-                uuid: activeDropdownUuids
+                uuid: activeDropdownUuid
             });
         }
 
@@ -2355,26 +2334,17 @@ var getParentScope = function (scope) {
 
         function isOpen(_uuid)
         {
-            return activeDropdownUuids.indexOf(_uuid) > -1;
+            return activeDropdownUuid === _uuid;
         }
 
         function registerActiveDropdownUuid(_uuid)
         {
-            if(activeDropdownUuids.indexOf(_uuid)==-1){
-                activeDropdownUuids.push(_uuid);
-            }
+            activeDropdownUuid = _uuid;
         }
 
-        function resetActiveDropdownUuid(_uuid)
+        function resetActiveDropdownUuid()
         {
-            if(_uuid){
-                var i = activeDropdownUuids.indexOf(_uuid);
-                if(i!=-1){
-                    activeDropdownUuids.splice(i, 1);
-                }
-                return;
-            }
-            activeDropdownUuids = [];
+            activeDropdownUuid = undefined;
         }
     }
 })();
