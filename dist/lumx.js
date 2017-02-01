@@ -1681,8 +1681,6 @@
             var velocityProperties;
             var velocityEasing;
 
-            dropdownMenu.removeClass('dropdown-square__' + lxDropdown.direction + (lxDropdown.position == 'center' ? '' : '_' + lxDropdown.position));
-
             angular.element('body').removeClass('no-scroll-dropdown-' + lxDropdown.uuid);
 
             dropdownMenu.css(
@@ -1831,16 +1829,28 @@
             {
                 dropdownMenuLeft = dropdownToggle.offset().left;
                 dropdownMenuRight = 'auto';
+                dropdownMenu.find('.dropdown-menu__top_beak,.dropdown-menu__bottom_beak').css(
+                {
+                    left: ((dropdownMenuWidth > dropdownToggleWidth ? dropdownToggleWidth / 2 : dropdownMenuWidth / 2) - 5) + "px"
+                });
             }
             else if (lxDropdown.position === 'right')
             {
                 dropdownMenuLeft = 'auto';
                 dropdownMenuRight = windowWidth - dropdownToggle.offset().left - dropdownToggleWidth;
+                dropdownMenu.find('.dropdown-menu__top_beak,.dropdown-menu__bottom_beak').css(
+                {
+                    left: ((dropdownMenuWidth > dropdownToggleWidth ? dropdownToggleWidth / 2 : dropdownMenuWidth / 2) - 5) + "px"
+                });
             }
             else if (lxDropdown.position === 'center')
             {
                 dropdownMenuLeft = (dropdownToggle.offset().left + (dropdownToggleWidth / 2)) - (dropdownMenuWidth / 2);
                 dropdownMenuRight = 'auto';
+                dropdownMenu.find('.dropdown-menu__top_beak,.dropdown-menu__bottom_beak').css(
+                {
+                    left: (dropdownMenuWidth / 2 - 5) + "px"
+                });
             }
 
             dropdownMenu.css(
@@ -1895,7 +1905,26 @@
                 var dropdownMenuWidth = dropdownMenu.outerWidth();
                 var enoughHeight = true;
 
-                dropdownMenu.addClass('dropdown-square__' + lxDropdown.direction + (lxDropdown.position == 'center' ? '' : '_' + lxDropdown.position));
+                if (lxDropdown.direction == 'down') {
+                    dropdownMenu.find('.dropdown-menu__top_beak').css(
+                    {
+                        display: "block"
+                    });
+                    dropdownMenu.find('.dropdown-menu__bottom_beak').css(
+                    {
+                        display: "none"
+                    });
+
+                } else {
+                    dropdownMenu.find('.dropdown-menu__top_beak').css(
+                    {
+                        display: "none"
+                    });
+                    dropdownMenu.find('.dropdown-menu__bottom_beak').css(
+                    {
+                        display: "block"
+                    });
+                }
 
                 if (availableHeight < dropdownMenuHeight)
                 {
@@ -5108,8 +5137,11 @@ angular.module("lumx.dropdown").run(['$templateCache', function(a) { a.put('drop
     '');
 	a.put('dropdown-toggle.html', '<div class="dropdown-toggle" ng-transclude></div>\n' +
     '');
-	a.put('dropdown-menu.html', '<div class="dropdown-menu">\n' +
+	a.put('dropdown-menu.html',
+    '<div class="dropdown-menu">\n' +
+    '<div class="dropdown-menu__top_beak"></div>\n' +
     '    <div class="dropdown-menu__content" ng-transclude ng-if="lxDropdownMenu.parentCtrl.isOpen"></div>\n' +
+    '<div class="dropdown-menu__bottom_beak"></div>\n' +
     '</div>\n' +
     '');
 	 }]);
