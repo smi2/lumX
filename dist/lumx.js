@@ -2333,14 +2333,12 @@ var getParentScope = function (scope) {
         service.resetActiveDropdownUuid = resetActiveDropdownUuid;
 
         $document.on('click', (event)=>{
-            if(event.target.className.indexOf('lx-select-choices__choice')>-1){
-                var scope = angular.element(event.target).scope();
-                var ddlScope = getParentScope(scope);
-                if(ddlScope && ddlScope.parentCtrl && ddlScope.parentCtrl.uuid){
-                    service.close(ddlScope.parentCtrl.uuid);
-                }
-                return;
+            var scope = angular.element(event.target).scope();
+            var ddlScope = getParentScope(scope);
+            if(ddlScope && ddlScope.parentCtrl && ddlScope.parentCtrl.uuid){
+                service.close(ddlScope.parentCtrl.uuid);
             }
+            return;
             closeActiveDropdown();
         });
 
