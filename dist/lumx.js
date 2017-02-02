@@ -1682,6 +1682,7 @@
             var velocityEasing;
 
             angular.element('body').removeClass('no-scroll-dropdown-' + lxDropdown.uuid);
+            dropdownToggle.removeClass('dropdown-toggle--is-active');
 
             dropdownMenu.css(
             {
@@ -1890,6 +1891,8 @@
                 .addClass('dropdown-menu--is-open')
                 .css('z-index', LxDepthService.getDepth())
                 .appendTo('body');
+
+            dropdownToggle.addClass('dropdown-toggle--is-active');
 
             angular.element('body').addClass('no-scroll-dropdown-' + lxDropdown.uuid);
 
