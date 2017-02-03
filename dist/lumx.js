@@ -2335,7 +2335,7 @@ var getParentScope = function (scope) {
         service.registerActiveDropdownUuid = registerActiveDropdownUuid;
         service.resetActiveDropdownUuid = resetActiveDropdownUuid;
 
-        $document.on('click', (event)=>{
+        $document.on('click', function(event){
             var scope = angular.element(event.target).scope();
             var ddlScope = getParentScope(scope);
             if(ddlScope && ddlScope.parentCtrl && ddlScope.parentCtrl.uuid){
