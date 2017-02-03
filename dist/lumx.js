@@ -2304,9 +2304,12 @@
     }
 })();
 var getParentScope = function (scope) {
+    if(!scope){
+        return;
+    }
     if(!scope.lxDropdownMenu){
         if(!scope.$parent){
-            return "";
+            return;
         }
         return getParentScope(scope.$parent);
     } else {
@@ -2340,8 +2343,8 @@ var getParentScope = function (scope) {
             var ddlScope = getParentScope(scope);
             if(ddlScope && ddlScope.parentCtrl && ddlScope.parentCtrl.uuid){
                 service.close(ddlScope.parentCtrl.uuid);
+                return;
             }
-            return;
             closeActiveDropdown();
         });
 
