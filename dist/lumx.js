@@ -2671,7 +2671,7 @@ var getParentScope = function (scope) {
                 if (notificationList.length > 1)
                 {
                     notificationList[idx].margin -= dnOffset;
-                    notificationList[idx].elem.css('marginBottom', notificationList[idx].margin + 'px');
+                    notificationList[idx].elem.css('marginTop', notificationList[idx].margin + 'px');
                 }
             }
 
@@ -2710,7 +2710,7 @@ var getParentScope = function (scope) {
                     upOffset = 24 + notificationList[newNotifIndex].height;
 
                     notificationList[idx].margin += upOffset;
-                    notificationList[idx].elem.css('marginBottom', notificationList[idx].margin + 'px');
+                    notificationList[idx].elem.css('marginTop', notificationList[idx].margin + 'px');
                 }
             }
         }
