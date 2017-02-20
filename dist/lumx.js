@@ -1718,7 +1718,7 @@
                         dropdownMenu
                             .removeAttr('style')
                             .removeClass('dropdown-menu--is-open')
-                            .appendTo($element.find('.dropdown'));
+                            .appendTo($element.children());
 
                         $scope.$apply(function()
                         {
@@ -1738,7 +1738,7 @@
                 dropdownMenu
                     .removeAttr('style')
                     .removeClass('dropdown-menu--is-open')
-                    .appendTo($element.find('.dropdown'));
+                    .appendTo($element.children());
 
                 lxDropdown.isOpen = false;
 
