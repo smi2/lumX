@@ -1562,7 +1562,8 @@
                 overToggle: '=?lxOverToggle',
                 position: '@?lxPosition',
                 verticalPosition: '@?lxVerticalPosition',
-                width: '@?lxWidth'
+                width: '@?lxWidth',
+                ngDisabled: '=?',
             },
             link: link,
             controller: LxDropdownController,
@@ -1644,6 +1645,7 @@
         lxDropdown.overToggle = angular.isDefined(lxDropdown.overToggle) ? lxDropdown.overToggle : false;
         lxDropdown.position = angular.isDefined(lxDropdown.position) ? lxDropdown.position : 'left';
         lxDropdown.verticalPosition = angular.isDefined(lxDropdown.verticalPosition) ? lxDropdown.verticalPosition : '';
+        lxDropdown.ngDisabled = angular.isDefined(lxDropdown.ngDisabled) ? lxDropdown.ngDisabled : false;
 
         $scope.$on('lx-dropdown__open', function(_event, _params)
         {
@@ -2054,7 +2056,7 @@
         {
             if (!lxDropdown.isOpen)
             {
-                if (dropdownToggle.find(".button-rounded").prop("disabled") == false) {
+                if (lxDropdown.ngDisabled == false) {
                     openDropdownMenu();
                 }
             }
