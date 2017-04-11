@@ -2054,7 +2054,9 @@
         {
             if (!lxDropdown.isOpen)
             {
-                openDropdownMenu();
+                if (dropdownToggle.find(".button-rounded").prop("disabled") == false) {
+                    openDropdownMenu();
+                }
             }
             else
             {
