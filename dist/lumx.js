@@ -2205,7 +2205,7 @@
             });
 
 
-            $timeout( () => {
+            $timeout( function() {
                 img = element.find('img');
                 if (img.length > 0) {
                     img.on('error', function () {
