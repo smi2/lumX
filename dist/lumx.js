@@ -2131,6 +2131,7 @@
         {
             var hoverTimeout = [];
             var mouseEvent = ctrl.hover ? 'mouseenter' : 'click';
+            var img = null;
 
             ctrl.registerDropdownToggle(element);
 
@@ -2155,7 +2156,9 @@
                         {
                             scope.$apply(function()
                             {
-                                ctrl.openDropdownMenu();
+                                if (ctrl.ngDisabled == false) {
+                                    ctrl.openDropdownMenu();
+                                }
                             });
                         }, ctrl.hoverDelay);
                     }
@@ -2200,6 +2203,22 @@
                     $timeout.cancel(hoverTimeout[1]);
                 }
             });
+
+
+            $timeout( () => {
+                img = element.find('img');
+                if (img.length > 0) {
+                    img.on('error', function () {
+                        ctrl.ngDisabled = true;
+                        element.css("cursor","default");
+                        var magnify = element.find('.img-zoom-button');
+                        if (magnify.length > 0) {
+                            magnify.css('display','none');
+                        }
+                    });
+                }
+            });
+
         }
     }
 
@@ -2306,6 +2325,7 @@
             });
         }
     }
+
 })();
 var getParentScope = function (scope) {
     if(!scope){
