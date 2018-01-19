@@ -1848,7 +1848,7 @@
             }
             else if (lxDropdown.position === 'center')
             {
-                dropdownMenuLeft = (dropdownToggle.offset().left + (dropdownToggleWidth / 2)) - (dropdownMenuWidth / 2);
+                dropdownMenuLeft = (dropdownToggle.offset().left + (dropdownToggleWidth / 2)) - (dropdownMenuWidth / 2) - window.scrollX;
                 dropdownMenuRight = 'auto';
                 dropdownMenu.find('.dropdown-menu__top_beak,.dropdown-menu__bottom_beak').css(
                 {
